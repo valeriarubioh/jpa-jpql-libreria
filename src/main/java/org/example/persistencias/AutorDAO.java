@@ -43,13 +43,9 @@ public class AutorDAO {
   }
 
   public Autor buscarAutorPorNombre(String nombre){
-    Autor autor = em.createQuery("SELECT a FROM Autor a WHERE a.nombre = :nombre", Autor.class)
+    return em.createQuery("SELECT a FROM Autor a WHERE a.nombre = :nombre", Autor.class)
         .setParameter("nombre", nombre)
         .getSingleResult();
-    if(autor == null) {
-      throw new EntityNotFoundException("Autor con nombre '" + nombre + "' no encontrado.");
-    }
-    return autor;
   }
 
 

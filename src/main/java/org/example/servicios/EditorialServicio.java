@@ -1,6 +1,8 @@
 package org.example.servicios;
 
+import jakarta.persistence.NoResultException;
 import java.util.List;
+import java.util.Scanner;
 import org.example.entidades.Editorial;
 import org.example.persistencias.EditorialDAO;
 
@@ -22,7 +24,7 @@ public class EditorialServicio {
       editorialDAO.guardarEditorial(editorial);
       System.out.println("Editorial guardada exitosamente");
     } catch (Exception e) {
-      System.out.println("Error: no se pudo guardar editorial " + e.getMessage());
+      System.out.println("Error: " + e.getMessage());
     }
   }
 
@@ -37,18 +39,22 @@ public class EditorialServicio {
     try {
       Editorial editorial = editorialDAO.buscarEditorialPorNombre(nombre);
       System.out.println("ID: " + editorial.getIdEditorial() + ", Nombre: " + editorial.getNombre() + ", Alta: " + editorial.isAlta());
+    } catch (NoResultException e){
+      System.out.println("Error: No se encontró la editorial con nombre " + nombre + ".");
     } catch (Exception e) {
       System.out.println("Error al buscar la editorial: " + e.getMessage());
     }
   }
 
-  public void actualizarEditorial(Integer id, String nombre) {
-    if (nombre == null || nombre.trim().isEmpty()) {
-      throw new IllegalArgumentException("El nombre de la editorial es obligatorio.");
-    }
+  public void actualizarEditorial(Integer id) {
     try {
       Editorial editorial = buscarEditorialPorId(id);
       if (editorial!= null) {
+        System.out.print("Ingrese nuevo nombre: ");
+        String nombre = new Scanner(System.in).nextLine();
+        if (nombre == null || nombre.trim().isEmpty()) {
+          throw new IllegalArgumentException("El nuevo nombre de la editorial es obligatorio.");
+        }
         editorial.setNombre(nombre);
         editorialDAO.actualizarEditorial(editorial);
         System.out.println("Editorial actualizada exitosamente.");
@@ -56,7 +62,7 @@ public class EditorialServicio {
         System.out.println("No se encontro la editorial.");
       }
     } catch (Exception e) {
-      System.out.println("Error: no se pudo actualizar la editorial. " + e.getMessage());
+      System.out.println("Error: " + e.getMessage());
     }
   }
 

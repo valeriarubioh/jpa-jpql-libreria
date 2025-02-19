@@ -35,9 +35,7 @@ public class Menu {
         case 4 -> {
           System.out.print("Ingrese ID del autor: ");
           Integer id = scanner.nextInt();
-          scanner.nextLine();
-          System.out.print("Ingrese nuevo nombre: ");
-          autorServicio.actualizarAutor(id, scanner.nextLine());
+          autorServicio.actualizarAutor(id);
         }
         case 5 -> {
           System.out.print("Ingrese ID del autor a dar de baja: ");
@@ -85,9 +83,7 @@ public class Menu {
         case 4 -> {
           System.out.print("Ingrese ID de la editorial: ");
           Integer id = scanner.nextInt();
-          scanner.nextLine();
-          System.out.print("Ingrese nuevo nombre: ");
-          editorialServicio.actualizarEditorial(id, scanner.nextLine());
+          editorialServicio.actualizarEditorial(id);
         }
         case 5 -> {
           System.out.print("Ingrese ID de la editorial a dar de baja: ");

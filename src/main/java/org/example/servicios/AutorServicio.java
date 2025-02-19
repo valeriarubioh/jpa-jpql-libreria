@@ -1,6 +1,8 @@
 package org.example.servicios;
 
+import jakarta.persistence.NoResultException;
 import java.util.List;
+import java.util.Scanner;
 import org.example.entidades.Autor;
 import org.example.persistencias.AutorDAO;
 
@@ -22,7 +24,7 @@ public class AutorServicio {
       autorDAO.guardarAutor(autor);
       System.out.println("Autor guardado exitosamente.");
     } catch(Exception e){
-      System.out.println("Error: no se pudo guardar autor " + e.getMessage());
+      System.out.println("Error: " + e.getMessage());
     }
   }
 
@@ -37,26 +39,30 @@ public class AutorServicio {
     try {
       Autor autor = autorDAO.buscarAutorPorNombre(nombre);
       System.out.println("ID: " + autor.getIdAutor() + ", Nombre: " + autor.getNombre() + ", Alta: " + autor.isAlta());
+    } catch (NoResultException e){
+      System.out.println("Error: No se encontro el autor con nombre " + nombre + ".");
     } catch (Exception e) {
       System.out.println("Error al buscar el autor: " + e.getMessage());
     }
   }
 
-  public void actualizarAutor(Integer id, String nombre){
-    if (nombre == null || nombre.trim().isEmpty()) {
-      throw new IllegalArgumentException("El nombre del autor es obligatorio.");
-    }
+  public void actualizarAutor(Integer id){
     try {
       Autor autor = buscarAutorPorId(id);
       if(autor != null){
-        autor.setNombre(nombre);
+        System.out.println("Ingrese nuevo nombre para el autor " + autor.getNombre());
+        String nuevoNombre = new Scanner(System.in).nextLine();
+        if (nuevoNombre == null || nuevoNombre.trim().isEmpty()) {
+          throw new IllegalArgumentException("El nuevo nombre del autor es obligatorio.");
+        }
+        autor.setNombre(nuevoNombre);
         autorDAO.actualizarAutor(autor);
         System.out.println("Autor dado de baja exitosamente.");
       } else {
         System.out.println("No se encontro el autor.");
       }
     } catch (Exception e){
-      System.out.println("Error: no se pudo actualizar autor " + e.getMessage());
+      System.out.println("Error: " + e.getMessage());
     }
   }
 

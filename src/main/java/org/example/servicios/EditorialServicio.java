@@ -92,7 +92,7 @@ public class EditorialServicio {
 
   public void imprimirLista(List<Editorial> lista) {
     if (lista.isEmpty()) {
-      System.out.println("No hay autores para mostrar.");
+      System.out.println("No hay editoriales para mostrar.");
     } else {
       for (Editorial editorial : lista) {
         System.out.println("ID: " + editorial.getIdEditorial() + ", Nombre: " + editorial.getNombre() + ", Alta: " + editorial.isAlta());

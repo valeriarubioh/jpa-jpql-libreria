@@ -208,7 +208,7 @@ public class LibroServicio {
 
   public void imprimirLista(List<Libro> lista) {
     if (lista.isEmpty()) {
-      System.out.println("No hay autores para mostrar.");
+      System.out.println("No hay libros para mostrar.");
     } else {
       for (Libro libro : lista) {
         System.out.println("ISBN: " + libro.getIsbn() + ", Titulo: " + libro.getTitulo() +

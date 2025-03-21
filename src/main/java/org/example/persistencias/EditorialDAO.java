@@ -3,6 +3,7 @@ package org.example.persistencias;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
 import java.util.List;
 import org.example.entidades.Editorial;
@@ -39,9 +40,21 @@ public class EditorialDAO {
   }
 
   public Editorial buscarEditorialPorNombre(String nombre) {
-    return em.createQuery("SELECT e FROM Editorial e WHERE e.nombre = :nombre", Editorial.class)
-        .setParameter("nombre", nombre)
-        .getSingleResult();
+    try {
+      return em.createQuery("SELECT e FROM Editorial e WHERE UPPER(TRIM(e.nombre)) = UPPER(TRIM(:nombre))", Editorial.class)
+          .setParameter("nombre", nombre)
+          .getSingleResult();
+    } catch (NoResultException e){
+      throw new NoResultException("Editorial con el nombre '" + nombre + "' no encontrada.");
+    }
+  }
+
+  public List<Editorial> buscarEditorialesPorNombre(String nombre) {
+    return em.createQuery(
+            "SELECT e FROM Editorial e WHERE UPPER(e.nombre) LIKE UPPER(:nombre)",
+            Editorial.class)
+        .setParameter("nombre", "%" + nombre.trim() + "%")
+        .getResultList();
   }
 
 

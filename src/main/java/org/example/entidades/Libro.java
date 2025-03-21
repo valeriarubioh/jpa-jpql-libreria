@@ -1,7 +1,9 @@
 package org.example.entidades;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -26,12 +28,16 @@ public class Libro {
   @Column(name = "alta")
   private boolean alta;
 
-  @ManyToOne
-  @JoinColumn(name = "autor")
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "autor", referencedColumnName = "id", nullable = false,
+      foreignKey = @jakarta.persistence
+          .ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   private Autor autor;
 
-  @ManyToOne
-  @JoinColumn(name = "editorial")
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "editorial", referencedColumnName = "id", nullable = false,
+      foreignKey = @jakarta.persistence
+          .ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
   private Editorial editorial;
 
   public Long getIsbn() {

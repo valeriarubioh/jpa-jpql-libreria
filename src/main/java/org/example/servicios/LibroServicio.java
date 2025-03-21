@@ -1,6 +1,7 @@
 package org.example.servicios;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
 import java.util.List;
 import java.util.Scanner;
 import org.example.entidades.Autor;
@@ -78,11 +79,13 @@ public class LibroServicio {
           actualizado = true;
         }
         if (!libro.getAutor().getIdAutor().equals(idAutor)) {
-          libro.setAutor(autorDAO.buscarAutor(idAutor));
+          Autor autor = autorDAO.buscarAutor(idAutor);
+          libro.setAutor(autor);
           actualizado = true;
         }
         if (!libro.getEditorial().getIdEditorial().equals(idEditorial)) {
-          libro.setEditorial(editorialDAO.buscarEditorial(idEditorial));
+          Editorial editorial = editorialDAO.buscarEditorial(idEditorial);
+          libro.setEditorial(editorial);
           actualizado = true;
         }
 
@@ -125,12 +128,12 @@ public class LibroServicio {
     try {
       Libro libro = libroDAO.buscarLibroPorISBN(isbn);
       if (libro != null) {
-        if(libro.getEjemplares() > ejemplares){
+        if(libro.getEjemplares() >= ejemplares){
           libro.setEjemplares(libro.getEjemplares() - ejemplares);
           libroDAO.actualizarLibro(libro);
           System.out.println("Ejemplares actualizados exitosamente del libro con ISBN " + isbn);
         } else {
-          System.out.println("No puedes bajar " + ejemplares + " del libro con ISBN " + isbn + " pues no hay suficientes");
+          System.out.println("No puedes bajar " + ejemplares + " ejemplares del libro con ISBN " + isbn + " pues no hay suficientes");
         }
 
       } else {
@@ -185,25 +188,58 @@ public class LibroServicio {
     }
   }
 
-  public List<Libro> buscarLibrosPorTitulo(String titulo) {
+  public void buscarLibrosPorTitulo(String titulo) {
     if (titulo == null || titulo.trim().isEmpty()) {
       throw new IllegalArgumentException("El título del libro es obligatorio para la búsqueda.");
     }
-    return libroDAO.buscarLibrosPorTitulo(titulo.trim());
+    try {
+      List<Libro> libros = libroDAO.buscarLibrosPorTitulo(titulo.trim());
+      imprimirLista(libros);
+    } catch (Exception e) {
+      System.out.println("Error: " + e.getMessage());
+    }
+
   }
 
-  public List<Libro> buscarLibrosPorAutor(String nombreAutor) {
+  public void buscarLibrosPorAutor(String nombreAutor) {
     if (nombreAutor == null || nombreAutor.trim().isEmpty()) {
       throw new IllegalArgumentException("El nombre del autor es obligatorio para la búsqueda.");
     }
-    return libroDAO.buscarLibrosPorAutor(nombreAutor.trim());
+    try {
+      List<Autor> autores = autorDAO.buscarAutorPorNombre(nombreAutor);
+      if(autores.isEmpty()){
+        System.out.println("No se encontraron autores que coincidan con: " + nombreAutor);
+        return;
+      }
+      for (Autor autor : autores) {
+        System.out.println("Autor encontrado: " + autor.getNombre() + " (ID: " + autor.getIdAutor() + ")");
+        List<Libro> libros = libroDAO.buscarLibrosPorAutorId(autor.getIdAutor());
+        imprimirLista(libros);
+      }
+    } catch (Exception e) {
+      System.out.println("Error: " + e.getMessage());
+    }
   }
 
-  public List<Libro> buscarLibrosPorEditorial(String nombreEditorial) {
+  public void buscarLibrosPorEditorial(String nombreEditorial) {
     if (nombreEditorial == null || nombreEditorial.trim().isEmpty()) {
-      throw new IllegalArgumentException("El nombre de la editorial es obligatorio para la búsqueda.");
+      throw new IllegalArgumentException(
+          "El nombre de la editorial es obligatorio para la búsqueda.");
     }
-    return libroDAO.buscarLibrosPorEditorial(nombreEditorial.trim());
+    try {
+      List<Editorial> editoriales = editorialDAO.buscarEditorialesPorNombre(nombreEditorial);
+      if (editoriales.isEmpty()) {
+        System.out.println("No se encontraron editoriales que coincidan con: " + nombreEditorial);
+        return;
+      }
+      for (Editorial editorial : editoriales) {
+        System.out.println("Editorial encontrada: " + editorial.getNombre() + " (ID: " + editorial.getIdEditorial() + ")");
+        List<Libro> libros = libroDAO.buscarLibrosPorEditorialId(editorial.getIdEditorial());
+        imprimirLista(libros);
+      }
+    } catch (Exception e) {
+      System.out.println("Error: " + e.getMessage());
+    }
   }
 
   public void imprimirLista(List<Libro> lista) {
@@ -211,9 +247,10 @@ public class LibroServicio {
       System.out.println("No hay libros para mostrar.");
     } else {
       for (Libro libro : lista) {
+        String editorialNombre = (libro.getEditorial() != null) ? libro.getEditorial().getNombre() : "null";
         System.out.println("ISBN: " + libro.getIsbn() + ", Titulo: " + libro.getTitulo() +
             ", Año: " + libro.getAnio() + ", Ejemplares: " + libro.getEjemplares() +
-            ", Editorial: " + libro.getEditorial().getNombre() + ", Autor: " + libro.getAutor().getNombre() +
+            ", Editorial: " + editorialNombre + ", Autor: " + libro.getAutor().getNombre() +
             ", Alta: " + libro.isAlta());
       }
     }

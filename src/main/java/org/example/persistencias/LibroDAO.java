@@ -38,15 +38,17 @@ public class LibroDAO {
         .getResultList();
   }
 
-  public List<Libro> buscarLibrosPorAutor(String nombreAutor) {
-    return em.createQuery("SELECT l FROM Libro l WHERE UPPER(l.autor.nombre) LIKE UPPER(:nombre) AND l.alta = true", Libro.class)
-        .setParameter("nombre", "%" + nombreAutor + "%")
+  public List<Libro> buscarLibrosPorAutorId(Integer autorId) {
+    return em.createQuery("SELECT l FROM Libro l WHERE l.autor.id = : id", Libro.class)
+        .setParameter("id", autorId)
         .getResultList();
   }
 
-  public List<Libro> buscarLibrosPorEditorial(String nombreEditorial) {
-    return em.createQuery("SELECT l FROM Libro l WHERE UPPER(l.editorial.nombre) LIKE UPPER(:nombre) AND l.alta = true", Libro.class)
-        .setParameter("nombre","%" + nombreEditorial + "%")
+  public List<Libro> buscarLibrosPorEditorialId(Integer editorialId) {
+    return em.createQuery(
+            "SELECT l FROM Libro l WHERE l.editorial.id = :id",
+            Libro.class)
+        .setParameter("id", editorialId)
         .getResultList();
   }
 

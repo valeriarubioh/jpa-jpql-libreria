@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.Persistence;
 import java.util.List;
 import org.example.entidades.Autor;
+import org.example.entidades.Editorial;
 
 public class AutorDAO {
   private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("LibreriaPU");
@@ -42,10 +43,10 @@ public class AutorDAO {
     return autor;
   }
 
-  public Autor buscarAutorPorNombre(String nombre){
-    return em.createQuery("SELECT a FROM Autor a WHERE a.nombre = :nombre", Autor.class)
-        .setParameter("nombre", nombre)
-        .getSingleResult();
+  public List<Autor> buscarAutorPorNombre(String nombre){
+    return em.createQuery("SELECT a FROM Autor a WHERE UPPER(a.nombre) LIKE UPPER(:nombre)", Autor.class)
+        .setParameter("nombre", "%" + nombre.trim() + "%")
+        .getResultList();
   }
 
 

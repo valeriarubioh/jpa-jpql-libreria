@@ -1,11 +1,13 @@
 package org.example.util;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import org.example.servicios.AutorServicio;
 import org.example.servicios.EditorialServicio;
 import org.example.servicios.LibroServicio;
 
 public class Menu {
+
   public static void menuAutores(AutorServicio autorServicio, Scanner scanner) {
     while (true) {
       System.out.println("\n--- Gestión de Autores ---");
@@ -19,31 +21,36 @@ public class Menu {
       System.out.println("0. Volver al Menú Principal");
       System.out.print("Seleccione una opción: ");
 
-      int opcion = scanner.nextInt();
-      scanner.nextLine();
+      int opcion = validarEntero(scanner);
+      String nombre;
+      Integer id;
 
       switch (opcion) {
         case 1 -> {
           System.out.print("Ingrese nombre del autor: ");
-          autorServicio.guardarAutor(scanner.nextLine());
+          nombre = validarString(scanner);
+          autorServicio.guardarAutor(nombre);
         }
         case 2 -> autorServicio.listarAutores();
         case 3 -> {
           System.out.print("Ingrese nombre del autor a buscar: ");
-          autorServicio.buscarAutorPorNombre(scanner.nextLine());
+          nombre = validarString(scanner);
+          autorServicio.buscarAutorPorNombre(nombre);
         }
         case 4 -> {
           System.out.print("Ingrese ID del autor: ");
-          Integer id = scanner.nextInt();
+          id = validarEntero(scanner);
           autorServicio.actualizarAutor(id);
         }
         case 5 -> {
           System.out.print("Ingrese ID del autor a dar de baja: ");
-          autorServicio.darBajaAutor(scanner.nextInt());
+          id = validarEntero(scanner);
+          autorServicio.darBajaAutor(id);
         }
         case 6 -> {
           System.out.print("Ingrese ID del autor a reactivar: ");
-          autorServicio.reactivarAutor(scanner.nextInt());
+          id = validarEntero(scanner);
+          autorServicio.reactivarAutor(id);
         }
         case 7 -> autorServicio.listarTodosLosAutores();
         case 0 -> {
@@ -67,31 +74,36 @@ public class Menu {
       System.out.println("0. Volver al Menú Principal");
       System.out.print("Seleccione una opción: ");
 
-      int opcion = scanner.nextInt();
-      scanner.nextLine();
+      int opcion = validarEntero(scanner);
+      String nombre;
+      Integer id;
 
       switch (opcion) {
         case 1 -> {
           System.out.print("Ingrese nombre de la editorial: ");
-          editorialServicio.guardarEditorial(scanner.nextLine());
+          nombre = validarString(scanner);
+          editorialServicio.guardarEditorial(nombre);
         }
         case 2 -> editorialServicio.listarEditoriales();
         case 3 -> {
           System.out.print("Ingrese nombre de la editorial a buscar: ");
-          editorialServicio.buscarEditorialPorNombre(scanner.nextLine());
+          nombre = validarString(scanner);
+          editorialServicio.buscarEditorialPorNombre(nombre);
         }
         case 4 -> {
           System.out.print("Ingrese ID de la editorial: ");
-          Integer id = scanner.nextInt();
+          id = validarEntero(scanner);
           editorialServicio.actualizarEditorial(id);
         }
         case 5 -> {
           System.out.print("Ingrese ID de la editorial a dar de baja: ");
-          editorialServicio.darBajaEditorial(scanner.nextInt());
+          id = validarEntero(scanner);
+          editorialServicio.darBajaEditorial(id);
         }
         case 6 -> {
           System.out.print("Ingrese ID de la editorial a reactivar: ");
-          editorialServicio.reactivarEditorial(scanner.nextInt());
+          id = validarEntero(scanner);
+          editorialServicio.reactivarEditorial(id);
         }
         case 7 -> editorialServicio.listarTodasLasEditoriales();
         case 0 -> {
@@ -121,44 +133,43 @@ public class Menu {
       System.out.println("0. Volver al Menú Principal");
       System.out.print("Seleccione una opción: ");
 
-      int opcion = scanner.nextInt();
-      scanner.nextLine();
+      int opcion = validarEntero(scanner);
 
       switch (opcion) {
         case 1 -> {
           System.out.println("Ingrese el ISBN del libro: ");
-          Long isbn = scanner.nextLong();
+          Long isbn = validarLong(scanner);
           scanner.nextLine();
           System.out.println("Ingrese el título del libro: ");
-          String titulo = scanner.nextLine();
+          String titulo = validarString(scanner);
           scanner.nextLine();
           System.out.println("Ingrese el año de publicación del libro: ");
-          Integer anio = scanner.nextInt();
+          Integer anio = validarEntero(scanner);
           System.out.println("Ingrese la cantidad de ejemplares: ");
-          int ejemplares = scanner.nextInt();
+          int ejemplares = validarEntero(scanner);
           System.out.println("Ingrese el ID del autor: ");
-          int idAutor = scanner.nextInt();
+          int idAutor = validarEntero(scanner);
           System.out.print("Ingrese ID de la editorial: ");
-          Integer idEditorial = scanner.nextInt();
+          Integer idEditorial = validarEntero(scanner);
           libroServicio.guardarLibro(isbn, titulo, anio, ejemplares, idAutor, idEditorial);
         }
         case 2 -> libroServicio.listarLibros();
         case 3 -> {
           System.out.println("Ingrese el ISBN del libro a buscar: ");
-          libroServicio.buscarLibroPorISBN(scanner.nextLong());
+          Long isbn = validarLong(scanner);
+          libroServicio.buscarLibroPorISBN(isbn);
         }
         case 4 -> {
           System.out.print("Ingrese ISBN del libro a actualizar: ");
-          Long isbn = scanner.nextLong();
-          scanner.nextLine();
+          Long isbn = validarLong(scanner);
           System.out.print("Ingrese nuevo título: ");
-          String titulo = scanner.nextLine();
+          String titulo = validarString(scanner);
           System.out.print("Ingrese nuevo año de publicación: ");
-          Integer anio = scanner.nextInt();
+          Integer anio = validarEntero(scanner);
           System.out.print("Ingrese nuevo ID del autor: ");
-          Integer idAutor = scanner.nextInt();
+          Integer idAutor = validarEntero(scanner);
           System.out.print("Ingrese nuevo ID de la editorial: ");
-          Integer idEditorial = scanner.nextInt();
+          Integer idEditorial = validarEntero(scanner);
           libroServicio.actualizarLibro(isbn, titulo, anio, idAutor, idEditorial);
         }
         case 5 -> {
@@ -202,6 +213,40 @@ public class Menu {
           return;
         }
         default -> System.out.println("Opción inválida.");
+      }
+    }
+  }
+
+  private static int validarEntero(Scanner scanner) {
+    while (true) {
+      try {
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+        return numero;
+      } catch (InputMismatchException e) {
+        System.out.println("Entrada inválida. Ingrese un número entero:");
+        scanner.nextLine();
+      }
+    }
+  }
+  private static String validarString(Scanner scanner) {
+    String entrada;
+    do {
+      entrada = scanner.nextLine().trim();
+      if (entrada.isEmpty()) {
+        System.out.println("No puede estar vacío. Intente de nuevo:");
+      }
+    } while (entrada.isEmpty());
+    return entrada;
+  }
+
+  private static Long validarLong(Scanner scanner) {
+    while (true) {
+      try {
+        return scanner.nextLong();
+      } catch (InputMismatchException e) {
+        System.out.println("Entrada inválida. Ingrese un número válido:");
+        scanner.nextLine();
       }
     }
   }

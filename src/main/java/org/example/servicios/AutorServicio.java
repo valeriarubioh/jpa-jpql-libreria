@@ -37,8 +37,12 @@ public class AutorServicio {
       throw new IllegalArgumentException("El nombre del autor es obligatorio.");
     }
     try {
-      Autor autor = autorDAO.buscarAutorPorNombre(nombre);
-      System.out.println("ID: " + autor.getIdAutor() + ", Nombre: " + autor.getNombre() + ", Alta: " + autor.isAlta());
+      List<Autor> autores = autorDAO.buscarAutorPorNombre(nombre);
+      for(Autor autor : autores) {
+        System.out.println(
+            "ID: " + autor.getIdAutor() + ", Nombre: " + autor.getNombre() + ", Alta: "
+                + autor.isAlta());
+      }
     } catch (NoResultException e){
       System.out.println("Error: No se encontro el autor con nombre " + nombre + ".");
     } catch (Exception e) {

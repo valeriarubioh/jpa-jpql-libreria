@@ -44,4 +44,18 @@ public class Editorial {
   public void setAlta(boolean alta) {
     this.alta = alta;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Editorial)) return false;
+    Editorial that = (Editorial) o;
+    return idEditorial != null && idEditorial.equals(that.idEditorial);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
+
 }
